@@ -15,7 +15,7 @@ export const PracticeInterface = () => {
     
     const animate = (timestamp: number) => {
       if (!startTime) startTime = timestamp;
-      const progress = (timestamp - startTime) / 2000; // 2000ms per movement
+      const progress = (timestamp - startTime) / 1000; // 1000ms per movement (faster)
       
       if (isPlaying) {
         // Calculate new position (moves from left to right)
@@ -99,8 +99,8 @@ export const PracticeInterface = () => {
             className="progress-highlight"
             style={{
               ...highlightPosition,
-              width: '150px',
-              height: '40px',
+              width: '40px', // Narrower width to match note size
+              height: '50px', // Taller height to cover the note
               transition: isPlaying ? 'none' : 'all 0.3s ease-out',
             }}
           />
