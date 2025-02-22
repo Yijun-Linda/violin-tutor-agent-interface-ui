@@ -6,7 +6,7 @@ export const PracticeInterface = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [performanceStatus, setPerformanceStatus] = useState<'good' | 'average' | 'poor'>('average');
   const [isMicActive, setIsMicActive] = useState(false);
-  const [highlightPosition, setHighlightPosition] = useState({ left: '10%', top: '20%' });
+  const [highlightPosition, setHighlightPosition] = useState({ left: '10%', top: '35%' }); // Adjusted initial position lower
 
   // Animation effect for the highlight box
   useEffect(() => {
@@ -15,7 +15,7 @@ export const PracticeInterface = () => {
     
     const animate = (timestamp: number) => {
       if (!startTime) startTime = timestamp;
-      const progress = (timestamp - startTime) / 1000; // 1000ms per movement (faster)
+      const progress = (timestamp - startTime) / 300; // 300ms per movement (much faster)
       
       if (isPlaying) {
         // Calculate new position (moves from left to right)
@@ -99,8 +99,8 @@ export const PracticeInterface = () => {
             className="progress-highlight"
             style={{
               ...highlightPosition,
-              width: '40px', // Narrower width to match note size
-              height: '50px', // Taller height to cover the note
+              width: '20px', // Narrower width to match single note size
+              height: '40px', // Adjusted height for better note coverage
               transition: isPlaying ? 'none' : 'all 0.3s ease-out',
             }}
           />
