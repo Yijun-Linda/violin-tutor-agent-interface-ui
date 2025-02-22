@@ -6,35 +6,33 @@ export const PracticeInterface = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [performanceStatus, setPerformanceStatus] = useState<'good' | 'average' | 'poor'>('average');
   const [isMicActive, setIsMicActive] = useState(false);
-  const [highlightPosition, setHighlightPosition] = useState({ left: '10%', top: '35%' }); // Adjusted initial position lower
+  const [currentNoteIndex, setCurrentNoteIndex] = useState(0);
+
+  // Define note positions (these would ideally come from music data)
+  const notePositions = [
+    { left: '10%', top: '28%' },
+    { left: '20%', top: '26%' },
+    { left: '30%', top: '28%' },
+    { left: '40%', top: '24%' },
+    { left: '50%', top: '26%' },
+    { left: '60%', top: '28%' },
+    { left: '70%', top: '26%' },
+    { left: '80%', top: '24%' }
+  ];
 
   // Animation effect for the highlight box
   useEffect(() => {
-    let animationFrame: number;
-    let startTime: number;
+    let intervalId: NodeJS.Timeout;
     
-    const animate = (timestamp: number) => {
-      if (!startTime) startTime = timestamp;
-      const progress = (timestamp - startTime) / 300; // 300ms per movement (much faster)
-      
-      if (isPlaying) {
-        // Calculate new position (moves from left to right)
-        const newLeft = 10 + (progress % 80); // Moves between 10% and 90%
-        setHighlightPosition(prev => ({
-          ...prev,
-          left: `${newLeft}%`
-        }));
-        animationFrame = requestAnimationFrame(animate);
-      }
-    };
-
     if (isPlaying) {
-      animationFrame = requestAnimationFrame(animate);
+      intervalId = setInterval(() => {
+        setCurrentNoteIndex(prev => (prev + 1) % notePositions.length);
+      }, 300); // Jump every 300ms
     }
 
     return () => {
-      if (animationFrame) {
-        cancelAnimationFrame(animationFrame);
+      if (intervalId) {
+        clearInterval(intervalId);
       }
     };
   }, [isPlaying]);
@@ -98,10 +96,11 @@ export const PracticeInterface = () => {
           <div 
             className="progress-highlight"
             style={{
-              ...highlightPosition,
-              width: '20px', // Narrower width to match single note size
-              height: '40px', // Adjusted height for better note coverage
-              transition: isPlaying ? 'none' : 'all 0.3s ease-out',
+              left: notePositions[currentNoteIndex].left,
+              top: notePositions[currentNoteIndex].top,
+              width: '20px',
+              height: '40px',
+              transition: 'all 0.1s ease-out', // Quick transition for jumps
             }}
           />
         </div>
