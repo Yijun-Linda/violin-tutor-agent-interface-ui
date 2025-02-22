@@ -43,8 +43,8 @@
 }
 
 .progress-highlight {
-  @apply absolute bg-blue-400/20 border border-blue-500/30 rounded transition-all duration-300;
-  backdrop-filter: blur(4px);
+  @apply absolute bg-blue-400/10 border border-blue-500/20 rounded transition-all duration-300;
+  backdrop-filter: blur(2px);
 }
 
 .control-button {

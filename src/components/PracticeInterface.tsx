@@ -1,11 +1,43 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Mic, Play, X, Settings, Pause } from 'lucide-react';
 
 export const PracticeInterface = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [performanceStatus, setPerformanceStatus] = useState<'good' | 'average' | 'poor'>('average');
   const [isMicActive, setIsMicActive] = useState(false);
+  const [highlightPosition, setHighlightPosition] = useState({ left: '10%', top: '20%' });
+
+  // Animation effect for the highlight box
+  useEffect(() => {
+    let animationFrame: number;
+    let startTime: number;
+    
+    const animate = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const progress = (timestamp - startTime) / 2000; // 2000ms per movement
+      
+      if (isPlaying) {
+        // Calculate new position (moves from left to right)
+        const newLeft = 10 + (progress % 80); // Moves between 10% and 90%
+        setHighlightPosition(prev => ({
+          ...prev,
+          left: `${newLeft}%`
+        }));
+        animationFrame = requestAnimationFrame(animate);
+      }
+    };
+
+    if (isPlaying) {
+      animationFrame = requestAnimationFrame(animate);
+    }
+
+    return () => {
+      if (animationFrame) {
+        cancelAnimationFrame(animationFrame);
+      }
+    };
+  }, [isPlaying]);
 
   const getStatusColor = () => {
     switch (performanceStatus) {
@@ -66,10 +98,10 @@ export const PracticeInterface = () => {
           <div 
             className="progress-highlight"
             style={{
-              left: '10%',
-              top: '20%',
+              ...highlightPosition,
               width: '150px',
               height: '40px',
+              transition: isPlaying ? 'none' : 'all 0.3s ease-out',
             }}
           />
         </div>
